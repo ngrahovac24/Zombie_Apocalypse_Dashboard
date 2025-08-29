@@ -1,6 +1,13 @@
-DROP DATABASE IF EXISTS `Zombie_Apocalypse`;
-CREATE DATABASE `Zombie_Apocalypse`;
-USE `Zombie_Apocalypse`;
+DROP DATABASE IF EXISTS Zombie_Apocalypse;
+CREATE DATABASE Zombie_Apocalypse;
+USE Zombie_Apocalypse;
+
+-- Table to store different health statuses
+CREATE TABLE health_status (
+    health_status_id INT NOT NULL,
+    health_status_text VARCHAR(50) NOT NULL,
+    PRIMARY KEY (health_status_id)
+);
 
 -- Table to store survivor information
 CREATE TABLE survivors (
@@ -12,13 +19,6 @@ CREATE TABLE survivors (
     health_status_id INT NOT NULL,
     PRIMARY KEY (survivor_id),
     FOREIGN KEY (health_status_id) REFERENCES health_status (health_status_id)
-);
-
--- Table to store different health statuses
-CREATE TABLE health_status (
-    health_status_id INT NOT NULL,
-    health_status_text VARCHAR(50) NOT NULL,
-    PRIMARY KEY (health_status_id)
 );
 
 -- Table to store safehouse information
@@ -121,6 +121,8 @@ CREATE TABLE resource_usage (
     FOREIGN KEY (weapon_id) REFERENCES weapons (weapon_id)
 );
 
+---
+
 -- Data Inserts with Updated Ammo IDs
 
 -- Insert data into health_status
@@ -162,4 +164,90 @@ INSERT INTO survivors (survivor_id, first_name, last_name, full_name, survivor_a
 (9, 'Mia', 'Cruz', 'Mia Cruz', 22, 2),
 (10, 'Lucas', 'Harrington', 'Lucas Harrington', 52, 3),
 (11, 'Grace', 'Chen', 'Grace Chen', 31, 1),
-(12, 'Jackson', 'Patel', 'Jackson Patel',
+(12, 'Jackson', 'Patel', 'Jackson Patel', 45, 2),
+(13, 'Zoe', 'Rodriguez', 'Zoe Rodriguez', 19, 1),
+(14, 'Carter', 'White', 'Carter White', 55, 3),
+(15, 'Chloe', 'Davis', 'Chloe Davis', 38, 4);
+
+-- Insert data into safehouses
+INSERT INTO safehouses (safehouse_id, safehouse_name, city_name, state_name, zombie_count, survivor_id) VALUES
+(1, 'The Coast', 'Rockport', 'Massachusetts', 5000, 1),
+(2, 'The Farm', 'Champaign', 'Illinois', 1500, 2),
+(3,'The Forest', 'Portland', 'Oregon', 750, 3),
+(4, 'The Golf Course', 'Augusta', 'Georgia', 1250, 4),
+(5, 'The Large City', 'Chicago', 'Illinois', 50000, 5),
+(6, 'The Mall', 'Minneapolis', 'Minnesota', 30000, 6),
+(7, 'The Military Base', 'Phoenix', 'Arizona', 7500, 7),
+(8, 'The Small Town', 'Devils Lake', 'North Dakota', 2500, 8),
+(9, 'The Suburbs', 'Carmel', 'Indiana', 10000, 9),
+(10, 'The Theme Park', 'Sandusky', 'Ohio', 17500, 10);
+
+-- Insert data into foods
+INSERT INTO foods (food_id, safehouse_id, food_name, food_quantity, expiration_date) VALUES
+(1, 1, 'Canned Beans', 20, '2030-01-15'),
+(2, 1, 'Cereal Boxes', 12, '2026-05-20'),
+(3, 2, 'Dried Rice', 50, NULL),
+(4, 2, 'Canned Tuna', 15, '2028-11-10'),
+(5, 3, 'Protein Bars', 30, '2027-03-05'),
+(6, 3, 'Salt', 5, NULL),
+(7, 4, 'Bottled Water', 100, NULL),
+(8, 5, 'Crackers', 25, '2026-08-01'),
+(9, 6, 'Granola Bars', 40, '2027-06-25'),
+(10, 7, 'Beef Jerky', 18, '2028-09-30'),
+(11, 8, 'Flour', 10, NULL),
+(12, 9, 'Sugar', 8, NULL);
+
+-- Insert data into drinks
+INSERT INTO drinks (drink_id, drink_name, drink_quantity) VALUES
+(1, 'Water Gallons', 25),
+(2, 'Pop Cans', 8),
+(3, 'Powdered Milk', 2),
+(4, 'Energy Drinks', 12),
+(5, 'Instant Tea', 4),
+(6, 'Coffee Bags', 3),
+(7, 'Juice Boxes', 15),
+(8, 'Sports Drinks', 10);
+
+-- Insert data into weapons
+INSERT INTO weapons (weapon_id, safehouse_id, weapon_name, weapon_durability, weapon_quantity) VALUES
+(1, 1, 'Pistol', 90.25, 3),
+(2, 1, 'Assault Rifle', 75.50, 1),
+(3, 2, 'Sniper Rifle', 98.75, 1),
+(4, 2, 'Baseball Bat', 45.23, 3),
+(5, 3, 'Crossbow', 79.56, 2),
+(6, 4, 'Hunting Knife', 85.10, 5),
+(7, 5, 'Shotgun', 65.40, 2),
+(8, 6, 'Machete', 58.75, 4),
+(9, 7, 'Grenades', 100.00, 10),
+(10, 8, 'Axe', 70.30, 3);
+
+-- Insert data into ammo
+INSERT INTO ammo (ammo_id, ammo_type, ammo_quantity) VALUES
+(1, '5.56mm', 250),
+(2, '9mm', 300),
+(3, '.308', 100),
+(4, '12 Gauge', 150),
+(5, 'Broadhead Bolts', 50);
+
+-- Insert data into world_event
+INSERT INTO world_event (event_id, safehouse_id, event_type_id, event_date, event_severity_id) VALUES
+(1, 1, 5, '2025-11-21', 1),
+(2, 2, 1, '2025-09-25', 4),
+(3, 4, 4, '2025-10-11', 2),
+(4, 5, 5, '2025-12-05', 1),
+(5, 7, 3, '2025-11-01', 5),
+(6, 10, 6, '2026-01-15', 3),
+(7, 9, 7, '2025-10-28', 4);
+
+-- Insert data into resource_usage, now with weapon and durability loss and updated ammo IDs
+INSERT INTO resource_usage (usage_id, survivor_id, safehouse_id, usage_date, food_id, food_quantity, drink_id, drink_quantity, ammo_id, ammo_quantity, weapon_id, weapon_durability_loss) VALUES
+(1, 1, 1, '2025-09-02', 1, 2, 1, 3, 2, 25, 1, 2.50),
+(2, 1, 1, '2025-09-03', 1, 3, 2, 5, 2, 21, 1, 1.80),
+(3, 2, 2, '2025-10-02', 3, 5, 3, 2, 4, 12, 7, 3.20),
+(4, 3, 3, '2025-10-05', 5, 1, 5, 1, 5, 5, 5, 0.75),
+(5, 4, 4, '2025-11-12', 8, 3, 7, 2, NULL, NULL, 6, 0.50),
+(6, 5, 5, '2025-12-06', 9, 2, 8, 1, 1, 10, 2, 4.10), -- Updated ammo_id from 7 to 1
+(7, 8, 8, '2025-10-20', 11, 1, NULL, NULL, 3, 30, 3, 2.00), -- Updated ammo_id from 6 to 3
+(8, 1, 1, '2025-09-10', NULL, NULL, NULL, NULL, NULL, NULL, 4, 1.50),
+(9, 2, 2, '2025-10-15', NULL, NULL, NULL, NULL, NULL, NULL, 8, 2.00),
+(10, 9, 9, '2025-11-25', 12, 1, 1, 1, NULL, NULL, NULL, NULL);
